@@ -16,9 +16,16 @@ import { ProjectDto } from './dto/project.dto';
 import { Project } from './entity/project.entity';
 import { ProjectService } from './project.service';
 
-@Controller('project')
+@Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('')
+  async getAll(): Promise<unknown> {
+    return this.projectService.getAll();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<unknown> {

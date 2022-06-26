@@ -11,8 +11,15 @@ export class ProjectService {
     private projectsRepository: Repository<Project>,
   ) {}
 
+  async getAll(): Promise<Project[]> {
+    return this.projectsRepository.find({ relations: ['tasks'] });
+  }
+
   async findById(id: number): Promise<Project> {
-    return this.projectsRepository.findOneBy({ id });
+    return this.projectsRepository.findOne({
+      where: { id },
+      relations: ['tasks'],
+    });
   }
 
   async create(user: User, project: Partial<Project>): Promise<number> {
