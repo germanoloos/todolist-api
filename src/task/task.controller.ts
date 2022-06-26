@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { TaskDto } from './dto/task.dto';
-import { Task } from './entity/task.entity';
 import { TaskService } from './task.service';
 
 @Controller('task')
@@ -37,7 +36,7 @@ export class TaskController {
   @Put('/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: Task,
+    @Body() body: TaskDto,
   ): Promise<unknown> {
     return this.taskService.update(id, body);
   }

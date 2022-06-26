@@ -35,7 +35,9 @@ export class ProjectService {
   }
 
   async update(id: number, project: Project): Promise<void> {
-    await this.projectsRepository.update({ id }, project);
+    const _project = await this.projectsRepository.findOneBy({ id });
+    project.name = project.name;
+    await this.projectsRepository.update({ id }, _project);
   }
 
   async delete(id: number): Promise<void> {
