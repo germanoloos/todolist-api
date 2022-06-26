@@ -11,8 +11,11 @@ export class ProjectService {
     private projectsRepository: Repository<Project>,
   ) {}
 
-  async getAll(): Promise<Project[]> {
-    return this.projectsRepository.find({ relations: ['tasks'] });
+  async getAll(user: User): Promise<Project[]> {
+    return this.projectsRepository.find({
+      where: { user: user },
+      relations: ['tasks'],
+    });
   }
 
   async findById(id: number): Promise<Project> {
@@ -22,12 +25,13 @@ export class ProjectService {
     });
   }
 
-  async create(user: User, project: Partial<Project>): Promise<number> {
+  async create(user: User, project: Partial<Project>): Promise<Project> {
     const prj = new Project();
     prj.name = project.name;
     prj.user = user;
     const result = await this.projectsRepository.insert(prj);
-    return result.identifiers[0] as unknown as number;
+    prj.id = result.identifiers[0] as unknown as number;
+    return prj;
   }
 
   async update(id: number, project: Project): Promise<void> {

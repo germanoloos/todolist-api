@@ -26,8 +26,19 @@ export class TaskService {
     return result.identifiers[0] as unknown as number;
   }
 
-  async update(id: number, task: Partial<Task>): Promise<void> {
-    await this.taskRepository.update({ id }, task);
+  async update(id: number, task: Partial<Task>): Promise<unknown> {
+    const _task = await this.findById(id);
+    if (!_task.done && task.done) {
+      _task.finishedAt = new Date();
+    } else {
+      if (_task.done && !task.done) {
+        _task.finishedAt = null;
+      }
+    }
+    _task.done = task.done;
+    _task.description = task.description;
+    await this.taskRepository.update({ id }, _task);
+    return _task;
   }
 
   async delete(id: number): Promise<void> {

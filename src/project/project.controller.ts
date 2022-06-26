@@ -22,8 +22,8 @@ export class ProjectController {
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  async getAll(): Promise<unknown> {
-    return this.projectService.getAll();
+  async getAll(@ReqUser() user: User): Promise<unknown> {
+    return this.projectService.getAll(user);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -16,6 +16,9 @@ export class Project {
   @Column({ nullable: false })
   name: string;
 
+  @Column({ default: new Date() })
+  createdAt: Date;
+
   @ManyToOne(() => User, (user) => user.projects, { onDelete: 'CASCADE' })
   user: User;
 

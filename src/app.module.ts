@@ -1,16 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { User } from './user/entity/user.entity';
-import { UsersModule } from './user/users.module';
-import { ProjectModule } from './project/project.module';
 import { Project } from './project/entity/project.entity';
+import { ProjectModule } from './project/project.module';
 import { Task } from './task/entity/task.entity';
 import { TaskModule } from './task/task.module';
+import { User } from './user/entity/user.entity';
+import { UsersModule } from './user/users.module';
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -26,8 +25,17 @@ import { TaskModule } from './task/task.module';
     ProjectModule,
     TaskModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          stopAtFirstError: true,
+          whitelist: true,
+        }),
+    },
+  ],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { LogonException } from './exceptions/logon.exception';
 import type { JwtPayload } from './interfaces/jwt-payload.interface';
+import { User } from '../user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,8 +14,11 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async login(login: string, password: string): Promise<{ token: string }> {
-    const user = await this.usersService.findByLogin(login);
+  async login(
+    login: string,
+    password: string,
+  ): Promise<{ token: string; user: any }> {
+    const user: User = await this.usersService.findByLogin(login);
     if (!user) throw new LogonException('User not found');
 
     const pswdCripto = await HashBase64Util.hashData(password, user.salt);
@@ -25,7 +29,9 @@ export class AuthService {
       // jti: 'xxx',
       sub: user.id,
     };
+    delete user.salt;
+    delete user.password;
     const token = await this.jwtService.signAsync(payload);
-    return { token };
+    return { token, user };
   }
 }
