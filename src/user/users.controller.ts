@@ -11,8 +11,8 @@ import {
   UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { ReqUser } from 'src/common/decorators/req-user.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { ReqUser } from '../common/decorators/req-user.decorator';
 import { UserDto } from './dto/user.dto';
 import { User } from './entity/user.entity';
 import { UsersService } from './users.service';

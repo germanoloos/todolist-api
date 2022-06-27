@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HashBase64Util } from 'src/common/utils/hash-base64.util';
 import { Repository } from 'typeorm';
+import { HashBase64Util } from '../common/utils/hash-base64.util';
 import { User } from './entity/user.entity';
 
 @Injectable()

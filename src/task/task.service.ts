@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CustomHttpException } from '../common/exceptions/custom-http.exception';
 import { ProjectService } from '../project/project.service';
 import { Task } from './entity/task.entity';
 
@@ -28,12 +33,16 @@ export class TaskService {
 
   async update(id: number, task: Partial<Task>): Promise<unknown> {
     const _task = await this.findById(id);
+    if (_task.done) {
+      throw new CustomHttpException(
+        'Action not allowed',
+        HttpStatus.BAD_REQUEST,
+        new Error('Action not allowed'),
+      );
+    }
+
     if (!_task.done && task.done) {
       _task.finishedAt = new Date();
-    } else {
-      if (_task.done && !task.done) {
-        _task.finishedAt = null;
-      }
     }
     _task.done = task.done;
     _task.description = task.description;
@@ -42,6 +51,14 @@ export class TaskService {
   }
 
   async delete(id: number): Promise<void> {
+    const _task = await this.findById(id);
+    if (_task.done) {
+      throw new CustomHttpException(
+        'Action not allowed',
+        HttpStatus.BAD_REQUEST,
+        new Error('Action not allowed'),
+      );
+    }
     await this.taskRepository.delete({ id });
   }
 }

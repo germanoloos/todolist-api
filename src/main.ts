@@ -21,6 +21,7 @@ async function bootstrap() {
     requestIdFactory: hexoid(32),
   });
   app.register(multipartPlugin);
+  app.enableCors();
   await app.listen(process.env.PORT);
 }
 bootstrap();
